@@ -155,7 +155,14 @@ const AnimeRandomizer = () => {
     <div className="w-full max-w-4xl mx-auto space-y-4">
       <Card>
         <CardHeader>
-          <CardTitle>AniList Random Anime Picker</CardTitle>
+          <CardTitle>Random Anime Picker</CardTitle>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground border rounded-lg p-3 bg-muted/50">
+            <div>
+              <p className="font-medium mb-1">About This App</p>
+              <p>This application uses the AniList GraphQL API but is not affiliated with or endorsed by AniList. 
+                 It helps you discover random anime from your list.</p>
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="flex gap-2 mb-4">

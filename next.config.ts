@@ -1,7 +1,10 @@
-import type { NextConfig } from "next";
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  output: 'export',  // Enable static exports
+  images: {
+    unoptimized: true,
+  },
+  basePath: '/anilist-randomizer', // Replace with your repository name
+}
 
-const nextConfig: NextConfig = {
-  /* config options here */
-};
-
-export default nextConfig;
+export default nextConfig

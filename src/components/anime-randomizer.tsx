@@ -5,6 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Loader2 } from 'lucide-react'
+import sanitizeHtml from 'sanitize-html'
 
 interface AnimeMedia {
   title: {
@@ -53,17 +54,11 @@ const AnimeRandomizer = () => {
   const formatDescription = (description: string | null): string => {
     if (!description) return 'No description available.'
     
-    return description
-      // Replace <br> and <br /> tags with newlines
-      .replace(/<br\s*\/?>/gi, '\n')
-      // Convert <i> tags to appropriate formatting
-      .replace(/<i>/gi, '')
-      .replace(/<\/i>/gi, '')
-      // Remove any other HTML tags
-      .replace(/<[^>]*>/g, '')
-      // Fix any double spaces
+    return sanitizeHtml(description, {
+      allowedTags: [],
+      allowedAttributes: {}
+    }).replace(/<br\s*\/?>/gi, '\n')
       .replace(/\s+/g, ' ')
-      // Fix multiple newlines
       .replace(/\n+/g, '\n')
       .trim()
   }

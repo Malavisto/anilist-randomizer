@@ -1,5 +1,7 @@
 ## Anilist Randomizer
-This repo is for a site that pulls a random anime from a AniList account
+This repo is for a site that pulls a random anime from an AniList account
+
+This site is not affiliated with AniList or AniChart in any way
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 

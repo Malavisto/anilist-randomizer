@@ -29,13 +29,46 @@ interface AnimeEntry {
   score: number | null
 }
 
+interface AnimeList {
+  entries: AnimeEntry[]
+}
+
+interface MediaListCollection {
+  lists: AnimeList[]
+}
+
+interface AniListResponse {
+  data: {
+    MediaListCollection: MediaListCollection | null
+  }
+  errors?: Array<{ message: string }>
+}
+
 const AnimeRandomizer = () => {
   const [username, setUsername] = useState('')
   const [anime, setAnime] = useState<AnimeEntry | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-  const fetchRandomAnime = async (username: string) => {
+  const formatDescription = (description: string | null): string => {
+    if (!description) return 'No description available.'
+    
+    return description
+      // Replace <br> and <br /> tags with newlines
+      .replace(/<br\s*\/?>/gi, '\n')
+      // Convert <i> tags to appropriate formatting
+      .replace(/<i>/gi, '')
+      .replace(/<\/i>/gi, '')
+      // Remove any other HTML tags
+      .replace(/<[^>]*>/g, '')
+      // Fix any double spaces
+      .replace(/\s+/g, ' ')
+      // Fix multiple newlines
+      .replace(/\n+/g, '\n')
+      .trim()
+  }
+
+  const fetchRandomAnime = async (username: string): Promise<AnimeEntry> => {
     const query = `
       query ($username: String) {
         MediaListCollection(userName: $username, type: ANIME) {
@@ -80,7 +113,7 @@ const AnimeRandomizer = () => {
         }),
       })
 
-      const data = await response.json()
+      const data: AniListResponse = await response.json()
 
       if (data.errors) {
         throw new Error(data.errors[0].message)
@@ -91,7 +124,7 @@ const AnimeRandomizer = () => {
         throw new Error(`No anime list found for username: ${username}`)
       }
 
-      const allEntries = lists.flatMap(list => list.entries)
+      const allEntries = lists.flatMap((list: AnimeList) => list.entries)
       if (allEntries.length === 0) {
         throw new Error('No anime found in list')
       }
@@ -189,10 +222,8 @@ const AnimeRandomizer = () => {
 
               <div>
                 <h3 className="font-bold mb-2">Description</h3>
-                <p className="text-gray-700">
-                  {anime.media.description
-                    ? anime.media.description.replace(/<br>/g, '\n')
-                    : 'No description available.'}
+                <p className="text-gray-700 whitespace-pre-line">
+                  {formatDescription(anime.media.description)}
                 </p>
               </div>
             </div>

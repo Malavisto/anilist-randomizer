@@ -21,6 +21,8 @@ interface AnimeMedia {
   seasonYear: number | null
   coverImage: {
     medium: string
+    large: string
+    extraLarge: string
   } | null
 }
 
@@ -64,6 +66,7 @@ const AnimeRandomizer = () => {
   }
 
   const fetchRandomAnime = async (username: string): Promise<AnimeEntry> => {
+
     const query = `
       query ($username: String) {
         MediaListCollection(userName: $username, type: ANIME) {
@@ -83,6 +86,8 @@ const AnimeRandomizer = () => {
                 seasonYear
                 coverImage {
                   medium
+                  large
+                  extraLarge
                 }
               }
               status
@@ -93,7 +98,8 @@ const AnimeRandomizer = () => {
       }
     `
 
-    const variables = { username }
+
+   const variables = { username }
 
     try {
       const response = await fetch('https://graphql.anilist.co', {
@@ -186,11 +192,16 @@ const AnimeRandomizer = () => {
           {anime && (
             <div className="space-y-4">
               <div className="flex gap-4">
-                {anime.media.coverImage?.medium && (
+                {anime.media.coverImage?.extraLarge && (
                   <img
-                    src={anime.media.coverImage.medium}
+                    src={
+                      anime.media.coverImage.extraLarge ||
+                      anime.media.coverImage.large ||
+                      anime.media.coverImage.medium
+                    }
                     alt={anime.media.title.english || anime.media.title.romaji}
-                    className="w-32 h-auto rounded"
+                    className="w-32 h-auto rounded object-cover"
+                    loading="lazy"
                   />
                 )}
                 <div className="flex-1">
@@ -235,5 +246,7 @@ const AnimeRandomizer = () => {
     </div>
   )
 }
+
+
 
 export default AnimeRandomizer

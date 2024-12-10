@@ -2,7 +2,7 @@
   "name": "anilist-randomizer",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://malavisto.github.io/anilist-randomizer",
+  "homepage": "/anilist-randomizer",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",

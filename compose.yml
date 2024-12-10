@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  nginx:
+    networks:
+      - proxy
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.anilist-randomizer.rule=Host(`projects.domain.tld`) && PathPrefix(`/anilist-randomizer`)"
+      - "traefik.http.routers.anilist-randomizer.entrypoints=websecure"
+      - "traefik.http.routers.anilist-randomizer.tls=true"
+      - "traefik.http.middlewares.anilist-randomizer-stripprefix.stripprefix.prefixes=/anilist-randomizer"
+      - "traefik.http.routers.anilist-randomizer.middlewares=anilist-randomizer-stripprefix@docker"
+networks:
+  proxy:
+      external: true

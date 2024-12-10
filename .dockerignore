@@ -1,5 +1,9 @@
 node_modules
 npm-debug.log
-.env
+build
+.dockerignore
+Dockerfile
 .git
 .gitignore
+.env
+*.md

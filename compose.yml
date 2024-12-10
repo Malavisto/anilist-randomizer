@@ -11,7 +11,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.anilist-randomizer.rule=Host(`projects.domain.tld`) && PathPrefix(`/anilist-randomizer`)"
-      - "traefik.http.routers.anilist-randomizer.entrypoints=websecure"
+      - "traefik.http.routers.anilist-randomizer.entrypoints=https"
       - "traefik.http.routers.anilist-randomizer.tls=true"
 networks:
   proxy:

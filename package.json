@@ -2,7 +2,7 @@
   "name": "anilist-randomizer",
   "version": "0.1.0",
   "private": true,
-  "homepage": "/anilist-randomizer",
+  "homepage": "/",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",

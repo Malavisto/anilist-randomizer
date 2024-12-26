@@ -4,7 +4,7 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  basePath: '/anilist-randomizer', // Replace with your repository name
+  basePath: '/', // Replace with your repository name
 }
 
 export default nextConfig

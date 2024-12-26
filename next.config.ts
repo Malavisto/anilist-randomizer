@@ -4,7 +4,7 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  basePath: '/', // Replace with your repository name
+  // No basePath needed since we want root path
 }
 
 export default nextConfig

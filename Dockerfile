@@ -12,7 +12,7 @@ RUN npm run build
 
 # Production stage
 FROM nginx:alpine
-COPY --from=build /app/out /usr/share/nginx/html/anilist-randomizer
+COPY --from=build /app/out /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80

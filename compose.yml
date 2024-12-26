@@ -4,13 +4,17 @@ services:
   nginx:
     networks:
       - proxy
-    image: ghcr.io/malavisto/anilist-randomizer:main 
-#    build: 
-#      context: .
-#      dockerfile: Dockerfile
+#    image: ghcr.io/malavisto/anilist-randomizer:main 
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 80:80  
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.anilist-randomizer.rule=Host(`projects.domain.tld`) && PathPrefix(`/anilist-randomizer`)"
+      - "traefik.http.routers.anilist-randomizer.middlewares=anilist-randomizer-stripprefix"
+      - "traefik.http.middlewares.anilist-randomizer-stripprefix.stripprefix.prefixes=/anilist-randomizer"
       - "traefik.http.routers.anilist-randomizer.entrypoints=https"
       - "traefik.http.routers.anilist-randomizer.tls=true"
 networks:

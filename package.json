@@ -23,7 +23,7 @@
     "tailwind-merge": "^2.5.4"
   },
   "devDependencies": {
-    "@types/node": "^20",
+    "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^18",
     "@types/sanitize-html": "^2.13.0",

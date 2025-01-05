@@ -1,20 +1,11 @@
 version: 2
 updates:
   # Configuration for npm
-  - package-ecosystem: "npm" # For JavaScript/Node.js
-    directory: "/" # Location of package files
+  - package-ecosystem: "npm"
+    directory: "/"
     schedule:
       interval: "weekly"
     target-branch: "dev"
-    auto-merge-settings:
-      enabled: true
-      # Only merge if all requirements are met (tests, approvals, etc.)
-      merge-strategy: "squash"
-      # Only auto-merge patch and minor updates for safety
-      allowed-updates:
-        - dependency-type: "all"
-          update-type: ["semver:patch", "semver:minor"]
-    # Security settings
     versioning-strategy: "auto"
     pull-request-branch-name:
       separator: "-"
@@ -27,9 +18,6 @@ updates:
       include: "scope"
     # Optional additional settings
     open-pull-requests-limit: 10
-    labels:
-      - "npm"
-      - "dependencies"
     reviewers:
       - "malavisto"
 

@@ -6,8 +6,6 @@ updates:
     schedule:
       interval: "weekly"
     target-branch: "dev"
-    # Enable auto-merge
-    automated_merge: true
     versioning-strategy: "auto"
     pull-request-branch-name:
       separator: "-"
@@ -29,7 +27,6 @@ updates:
     schedule:
       interval: "weekly"
     target-branch: "dev"
-    automated_merge: true
 
   # Configuration for GitHub Actions
   - package-ecosystem: "github-actions"
@@ -37,4 +34,3 @@ updates:
     schedule:
       interval: "weekly"
     target-branch: "dev"
-    automated_merge: true

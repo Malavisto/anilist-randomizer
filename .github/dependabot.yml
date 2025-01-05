@@ -1,0 +1,31 @@
+version: 2
+updates:
+  # Configuration for npm
+  - package-ecosystem: "npm" # For JavaScript/Node.js
+    directory: "/" # Location of package files
+    schedule:
+      interval: "weekly"
+    target-branch: "dev"
+    # Optional additional settings
+    open-pull-requests-limit: 10
+    labels:
+      - "npm"
+      - "dependencies"
+    assignees:
+      - "malavisto"
+    reviewers:
+      - "malavisto"
+
+  # Configuration for Docker
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    target-branch: "dev"
+
+  # Configuration for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    target-branch: "dev"

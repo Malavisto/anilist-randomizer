@@ -1,5 +1,5 @@
 # Build stage
-FROM node:23.7.0-alpine AS build
+FROM node:23.9.0-alpine AS build
 WORKDIR /app
 
 # Copy package files and install dependencies

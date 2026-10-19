@@ -1,19 +1,14 @@
-# Build stage
+# Build the static site with the same pnpm version used locally and in CI.
 FROM node:24.21.0-alpine AS build
 WORKDIR /app
-
-# Copy package files and install dependencies
-COPY package*.json ./
-RUN npm ci
-
-# Copy source files and build
+COPY package.json pnpm-lock.yaml ./
+RUN npm install --global "$(node -p 'require("./package.json").packageManager')"
+RUN pnpm install --frozen-lockfile
 COPY . .
-RUN npm run build
+RUN pnpm build
 
-# Production stage
 FROM nginx:alpine
 COPY --from=build /app/out /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

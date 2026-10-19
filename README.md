@@ -1,41 +1,40 @@
-## Anilist Randomizer
-This repo is for a site that pulls a random anime from an AniList account
+# AniList Randomizer
 
-This site is not affiliated with AniList or AniChart in any way
+Pick a random anime from an AniList account. This project is not affiliated with AniList or AniChart.
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Development
 
-## Getting Started
+Use Node.js 22.18+ (CI and Docker use Node 24) and the pnpm version pinned in `package.json`. Install pnpm with `npm install --global pnpm@10.34.7`, then:
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
+```sh
+pnpm install --frozen-lockfile
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000. The page is in `src/app/page.tsx`, the UI in `src/components/anime-randomizer.tsx`, and AniList requests and selection in `src/lib/anilist.ts`.
 
-You can start editing the page by modifying `app/page.tsx` or `src\components\anime-randomizer.tsx`. The page auto-updates as you edit the file.
+```sh
+pnpm test
+pnpm typecheck
+pnpm build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Tests use Node's built-in test runner. There is no linter. `pnpm build` creates a static site in `out/`; `next start` is not supported for static exports. Serve `out/` with a static web server to preview production output.
 
-## Learn More
+## Dependency maintenance
 
-To learn more about Next.js, take a look at the following resources:
+Renovate runs on Monday mornings, South African time, and waits seven days after a release. Routine updates are grouped; major updates stay separate so a broken upgrade does not block other updates. Lockfile maintenance runs weekly.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+All updates, including majors, can merge automatically once the required `App checks` and `Container checks` pass. CI runs on `renovate/**` branch pushes as well as PRs. Renovate merges passing branches directly, avoiding a PR for successful updates; failed updates can still create a PR that needs attention. The Dependency Dashboard remains available for visibility and retries.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Builds and regression tests catch many upgrade failures, but cannot guarantee that every major update preserves runtime behavior. Updates that break checks remain unmerged.
 
-## Deploy on Vercel
+Use pnpm and commit `pnpm-lock.yaml`; do not generate `package-lock.json`. CI and Docker use frozen installs.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Hosting
 
-Check out the [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The app calls AniList directly from the browser. There is no server or secret configuration. Vercel is connected to the repository and provides preview builds. The repository also contains optional GitHub Pages and Docker publishing workflows; both were manually disabled at the October 2026 maintenance audit. CI builds and smoke-tests Docker without publishing it.
+
+The Docker image serves `out/` with nginx. `compose.yml` contains an example Traefik setup. The Docker/Traefik deployment strips `/anilist-randomizer` and expects root-relative `/_next/` asset paths, so `next.config.ts` deliberately has no `basePath`.
+
+GitHub Pages at a project subpath requires separate asset routing or a build configured for that subpath. Check both hosting targets before changing `basePath`, nginx routing, or Traefik labels. The optional Pages workflow must be configured for its actual hosting URL before re-enabling it.

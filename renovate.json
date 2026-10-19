@@ -1,23 +1,41 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "dependencyDashboard": true,
-  "timezone": "Africa/Johannesburg",
-  "automergeType": "branch",
-  // 00:00 to 09:00 SAST
-  "schedule": [
-    "* 0-9 * * *"
-  ],
   "extends": [
     "config:recommended"
   ],
-  "baseBranchPatterns": [
-    "main"
+  "timezone": "Africa/Johannesburg",
+  "dependencyDashboard": true,
+  "schedule": [
+    "* 0-9 * * 1"
   ],
   "minimumReleaseAge": "7 days",
+  "automerge": true,
+  "automergeType": "branch",
+  "platformAutomerge": false,
+  "prConcurrentLimit": 2,
   "packageRules": [
     {
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "automerge": true
+      "description": "Batch routine updates; keep breaking upgrades separate so one failure does not block everything.",
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+      ],
+      "groupName": "routine dependencies"
+    },
+    {
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "dependencyDashboardApproval": false
     }
-  ]
+  ],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": [
+      "* 0-9 * * 1"
+    ],
+    "automerge": true
+  }
 }

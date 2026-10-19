@@ -6,46 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Loader2 } from 'lucide-react'
 import sanitizeHtml from 'sanitize-html'
-
-interface AnimeMedia {
-  title: {
-    english: string | null
-    romaji: string
-  }
-  episodes: number | null
-  format: string
-  status: string
-  genres: string[]
-  description: string | null
-  averageScore: number
-  seasonYear: number | null
-  coverImage: {
-    medium: string
-    large: string
-    extraLarge: string
-  } | null
-}
-
-interface AnimeEntry {
-  media: AnimeMedia
-  status: string
-  score: number | null
-}
-
-interface AnimeList {
-  entries: AnimeEntry[]
-}
-
-interface MediaListCollection {
-  lists: AnimeList[]
-}
-
-interface AniListResponse {
-  data: {
-    MediaListCollection: MediaListCollection | null
-  }
-  errors?: Array<{ message: string }>
-}
+import { fetchRandomAnime, type AnimeEntry } from '@/lib/anilist'
 
 const AnimeRandomizer = () => {
   const [username, setUsername] = useState('')
@@ -56,84 +17,12 @@ const AnimeRandomizer = () => {
   const formatDescription = (description: string | null): string => {
     if (!description) return 'No description available.'
     
-    return sanitizeHtml(description, {
+    return sanitizeHtml(description.replace(/<br\s*\/?>/gi, '\n'), {
       allowedTags: [],
       allowedAttributes: {}
-    }).replace(/<br\s*\/?>/gi, '\n')
-      .replace(/\s+/g, ' ')
+    }).replace(/[^\S\n]+/g, ' ')
       .replace(/\n+/g, '\n')
       .trim()
-  }
-
-  const fetchRandomAnime = async (username: string): Promise<AnimeEntry> => {
-
-    const query = `
-      query ($username: String) {
-        MediaListCollection(userName: $username, type: ANIME) {
-          lists {
-            entries {
-              media {
-                title {
-                  english
-                  romaji
-                }
-                episodes
-                format
-                status
-                genres
-                description
-                averageScore
-                seasonYear
-                coverImage {
-                  medium
-                  large
-                  extraLarge
-                }
-              }
-              status
-              score
-            }
-          }
-        }
-      }
-    `
-
-
-   const variables = { username }
-
-    try {
-      const response = await fetch('https://graphql.anilist.co', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({
-          query,
-          variables,
-        }),
-      })
-
-      const data: AniListResponse = await response.json()
-
-      if (data.errors) {
-        throw new Error(data.errors[0].message)
-      }
-
-      const lists = data.data.MediaListCollection?.lists
-      if (!lists || lists.length === 0) {
-        throw new Error(`No anime list found for username: ${username}`)
-      }
-
-      const allEntries = lists.flatMap((list: AnimeList) => list.entries)
-      if (allEntries.length === 0) {
-        throw new Error('No anime found in list')
-      }
-
-      return allEntries[Math.floor(Math.random() * allEntries.length)]
-    } catch (error) {
-      throw new Error(`Error fetching anime: ${error instanceof Error ? error.message : 'Unknown error'}`)
-    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -171,9 +60,12 @@ const AnimeRandomizer = () => {
           </div>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="flex gap-2 mb-4">
+          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2 mb-4">
             <Input
               type="text"
+              aria-label="AniList username"
+              autoComplete="username"
+              disabled={loading}
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Enter AniList username"
@@ -186,13 +78,13 @@ const AnimeRandomizer = () => {
           </form>
 
           {error && (
-            <div className="text-red-500 mb-4">{error}</div>
+            <div role="alert" className="text-red-600 mb-4">{error}</div>
           )}
 
           {anime && (
             <div className="space-y-4">
               <div className="flex gap-4">
-                {anime.media.coverImage?.extraLarge && (
+                {anime.media.coverImage && (
                   <img
                     src={
                       anime.media.coverImage.extraLarge ||
@@ -213,7 +105,7 @@ const AnimeRandomizer = () => {
                     <div>Format: {anime.media.format || 'N/A'}</div>
                     <div>Your Status: {anime.status}</div>
                     <div>Your Score: {anime.score || 'Not rated'}</div>
-                    <div>Average Score: {anime.media.averageScore}%</div>
+                    <div>Average Score: {anime.media.averageScore == null ? 'N/A' : `${anime.media.averageScore}%`}</div>
                     <div>Year: {anime.media.seasonYear || 'N/A'}</div>
                   </div>
                 </div>
@@ -246,7 +138,5 @@ const AnimeRandomizer = () => {
     </div>
   )
 }
-
-
 
 export default AnimeRandomizer

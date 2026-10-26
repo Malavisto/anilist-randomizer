@@ -1,5 +1,5 @@
 # Build the static site with the same pnpm version used locally and in CI.
-FROM node:24.21.0-alpine AS build
+FROM node:24.22.0-alpine AS build
 WORKDIR /app
 COPY package.json pnpm-lock.yaml ./
 RUN npm install --global "$(node -p 'require("./package.json").packageManager')"
